@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Del ruido a la luz · Humilde Instrumento</title>
+<meta name="description" content="Una pequeña sala: seis escenas sobre el silencio, la presencia de Dios y el cambio interior. Por Humilde Instrumento.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070605;
+    --wall: #0d0b09;
+    --text: #efe6d2;
+    --muted: #a99c84;
+    --gold: #c9973c;
+    --gold-soft: rgba(201,151,60,.35);
+    --glow: rgba(255,190,90,.35);
+    --serif: "Cormorant Garamond", Georgia, serif;
+    --sans: "Inter", system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--text); font-family: var(--serif);
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+
+  /* ── Barra superior ── */
+  .top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 16px; font-family: var(--sans); font-size: 12px; letter-spacing: .18em; text-transform: uppercase;
+    background: linear-gradient(to bottom, rgba(7,6,5,.9), transparent);
+  }
+  .top a { color: var(--gold); text-decoration: none; }
+  .lang { display: flex; gap: 4px; }
+  .pill {
+    font: 500 12px var(--sans); letter-spacing: .1em; color: var(--text); cursor: pointer;
+    background: transparent; border: 1px solid var(--gold-soft); border-radius: 999px; padding: 6px 12px;
+    transition: background .25s, border-color .25s;
+  }
+  .pill:hover, .pill:focus-visible { border-color: var(--gold); outline: none; }
+  .pill[aria-pressed="true"] { background: rgba(201,151,60,.16); border-color: var(--gold); }
+
+  /* ── Entrada ── */
+  .hero {
+    min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 80px 16px 40px;
+    position: relative; isolation: isolate;
+  }
+  .hero::before { /* resplandor de la sala que aparece al encenderse */
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: radial-gradient(ellipse at 50% 38%, rgba(255,170,70,.16), rgba(201,151,60,.05) 35%, transparent 65%);
+    animation: roomGlow 3s ease-out .8s both;
+  }
+  @keyframes roomGlow { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ── Vela ── */
+  .candle { position: relative; width: 60px; height: 110px; margin-bottom: 30px; }
+  .wick {
+    position: absolute; bottom: 0; left: 50%; width: 3px; height: 16px; margin-left: -1.5px;
+    border-radius: 2px; background: linear-gradient(#000, #3b2a18 60%, #5a4530);
+  }
+  .halo {
+    position: absolute; left: 50%; top: 45%; width: 320px; height: 320px; margin: -160px 0 0 -160px;
+    border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(255,185,90,.30), rgba(255,150,60,.09) 40%, transparent 70%);
+    animation: breathe 3.2s ease-in-out infinite;
+  }
+  .flame {
+    position: absolute; bottom: 12px; left: 50%; width: 28px; height: 74px; margin-left: -14px;
+    transform-origin: 50% 100%;
+    animation: sway 4s ease-in-out infinite;
+  }
+  .flame > div {
+    position: absolute; left: 50%; bottom: 0; transform-origin: 50% 100%;
+    border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  }
+  .outer {
+    width: 28px; height: 74px; margin-left: -14px;
+    background: radial-gradient(ellipse at 50% 82%, rgba(255,215,120,1) 0%, rgba(255,150,45,.9) 40%, rgba(225,85,20,.35) 65%, transparent 76%);
+    filter: blur(1.4px);
+    box-shadow: 0 0 30px 8px rgba(255,150,50,.25);
+    animation: flick 1.7s ease-in-out infinite;
+  }
+  .inner {
+    width: 15px; height: 46px; margin-left: -7.5px; bottom: 3px;
+    background: radial-gradient(ellipse at 50% 78%, #fffdf2 0%, #fff0b8 40%, rgba(255,205,110,.6) 65%, transparent 80%);
+    filter: blur(.7px);
+    animation: flick 1.15s ease-in-out infinite reverse;
+  }
+  .core { /* base azulada, como en una llama real */
+    width: 9px; height: 13px; margin-left: -4.5px; bottom: 2px;
+    background: radial-gradient(ellipse at 50% 60%, rgba(110,150,255,.8), rgba(110,150,255,0) 72%);
+  }
+  .spark {
+    position: absolute; bottom: 14px; left: 50%; width: 6px; height: 6px; margin-left: -3px;
+    border-radius: 50%; background: #fff; box-shadow: 0 0 14px 5px #ffd27a; opacity: 0;
+  }
+  @keyframes flick {
+    0%,100% { transform: scale(1,1) skewX(0); }
+    20% { transform: scale(.95,1.06) skewX(2deg); }
+    45% { transform: scale(1.04,.94) skewX(-2.5deg); }
+    70% { transform: scale(.97,1.04) skewX(1.5deg); }
+  }
+  @keyframes sway {
+    0%,100% { transform: rotate(-1.5deg); }
+    50% { transform: rotate(1.5deg); }
+  }
+  @keyframes breathe {
+    0%,100% { opacity: .85; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.07); }
+  }
+
+  /* ── Encendido (solo en la entrada) ── */
+  .hero .spark { animation: spark .8s ease-out .4s both; }
+  .hero .flame { animation: ignite 1.8s cubic-bezier(.2,.9,.3,1.15) .75s both, sway 4s ease-in-out 2.6s infinite; }
+  .hero .halo { animation: haloIn 2.6s ease-out .9s both, breathe 3.2s ease-in-out 3.5s infinite; }
+  .hero h1, .hero .sub, .hero .intro { animation: rise 1.4s ease-out both; }
+  .hero h1 { animation-delay: 2s; }
+  .hero .sub { animation-delay: 2.5s; }
+  .hero .intro { animation-delay: 3s; }
+  .hero .scroll-hint { animation: rise 1.2s ease-out 3.6s both, bob 2.4s ease-in-out 4.8s infinite; }
+  @keyframes spark {
+    0% { opacity: 0; transform: scale(.2); }
+    25% { opacity: 1; transform: scale(1.8); }
+    100% { opacity: 0; transform: scale(.4); }
+  }
+  @keyframes ignite {
+    0% { opacity: 0; transform: scale(0, 0); }
+    12% { opacity: 1; transform: scale(.3, .12); }
+    35% { transform: scale(.45, .7) rotate(2deg); }
+    60% { transform: scale(1.1, 1.15) rotate(-2deg); }
+    80% { transform: scale(.96, .97); }
+    100% { opacity: 1; transform: scale(1, 1) rotate(-1.5deg); }
+  }
+  @keyframes haloIn {
+    0% { opacity: 0; transform: scale(.15); }
+    55% { opacity: 1; transform: scale(1.18); }
+    100% { opacity: .85; transform: scale(1); }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+  .hero h1 { font-weight: 400; font-size: clamp(40px, 7vw, 76px); line-height: 1.05; }
+  .hero .sub { margin-top: .5em; color: var(--muted); font-style: italic; font-size: clamp(18px, 2.2vw, 23px); }
+  .hero .intro { margin-top: 2em; max-width: 560px; font-size: clamp(18px, 2vw, 21px); line-height: 1.6; }
+  .scroll-hint {
+    margin-top: 3em; font: 500 11px var(--sans); letter-spacing: .3em; text-transform: uppercase; color: var(--gold);
+    text-decoration: none; animation: bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  /* ── Sala ── */
+  .room { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+  .work {
+    padding: 14vh 0; display: grid; justify-items: center; text-align: center;
+    opacity: 0; transform: translateY(30px); transition: opacity 1.2s ease, transform 1.2s ease;
+  }
+  .work.seen { opacity: 1; transform: none; }
+  .work + .work { border-top: 1px solid rgba(201,151,60,.08); }
+
+  .numeral { font-family: var(--sans); font-size: 11px; letter-spacing: .4em; color: var(--gold); text-transform: uppercase; }
+  .work h2 { margin: .4em 0 1.2em; font-weight: 400; font-size: clamp(30px, 4.5vw, 46px); }
+
+  .frame {
+    position: relative; width: min(100%, 760px);
+    padding: clamp(8px, 1.4vw, 14px);
+    background: linear-gradient(145deg, #3a2a12, #8a6528 30%, #5a4119 55%, #b08840 80%, #3a2a12);
+    box-shadow: 0 30px 80px rgba(0,0,0,.7), 0 0 60px rgba(201,151,60,.08);
+  }
+  .frame::before { /* paspartú */
+    content: ""; position: absolute; inset: clamp(8px, 1.4vw, 14px);
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.6), inset 0 0 30px rgba(0,0,0,.8); pointer-events: none; z-index: 2;
+  }
+  .frame video, .frame .missing {
+    display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; background: #000;
+  }
+  .frame.vertical { width: min(100%, 420px); }
+  .frame.vertical video, .frame.vertical .missing { aspect-ratio: 9 / 16; }
+  .missing {
+    display: none !important; align-items: center; justify-content: center; flex-direction: column; gap: 8px;
+    font: 13px var(--sans); color: var(--muted); letter-spacing: .05em;
+  }
+  .frame.is-missing video { display: none; }
+  .frame.is-missing .missing { display: flex !important; }
+
+  .frame { cursor: pointer; }
+  .progress { width: min(100%, 760px); height: 2px; margin-top: 14px; background: rgba(201,151,60,.15); }
+  .progress span { display: block; height: 100%; width: 0; background: var(--gold); transition: width .25s linear; }
+  .controls { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .controls[hidden] { display: none; }
+  .controls .c-play { min-width: 120px; }
+
+  .verse { margin-top: 2.2em; max-width: 620px; font-style: italic; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.4; }
+  .verse q { quotes: "«" "»" "‹" "›"; }
+  .verse cite { display: block; margin-top: .6em; font: normal 500 11px var(--sans); letter-spacing: .25em; text-transform: uppercase; color: var(--muted); }
+
+  .story {
+    margin-top: 2.4em; max-width: 600px; text-align: left;
+    font-size: clamp(18px, 2vw, 20px); line-height: 1.7; color: #e2d8c3;
+  }
+  .story p + p { margin-top: 1em; }
+  .story p:first-child::first-letter {
+    float: left; font-size: 3.4em; line-height: .85; padding: .06em .1em 0 0; color: var(--gold);
+  }
+
+  /* ── Cierre ── */
+  .outro {
+    min-height: 90svh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 80px 16px;
+    background: radial-gradient(ellipse at 50% 40%, rgba(201,151,60,.12), transparent 60%);
+    border-top: 1px solid rgba(201,151,60,.08);
+  }
+  .outro h2 { font-weight: 400; font-size: clamp(34px, 5vw, 52px); }
+  .outro .tag { margin-top: .4em; color: var(--muted); font-style: italic; font-size: 20px; }
+  .outro .verse { margin-top: 1.8em; }
+  .outro .about { margin-top: 2.4em; max-width: 560px; font-size: 19px; line-height: 1.65; }
+  .links { margin-top: 2em; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .links a { text-decoration: none; }
+  .reflection { margin-top: 3em; max-width: 600px; text-align: left; font-size: clamp(18px, 2vw, 20px); line-height: 1.75; }
+  .reflection .numeral { display: block; text-align: center; margin-bottom: 1.2em; }
+  .about p:first-child { font-style: italic; }
+  .reflection p + p { margin-top: 1em; }
+  .signature { margin-top: 1em; text-align: right; font-style: italic; color: var(--gold); }
+  .share { margin-top: 4em; padding-top: 3em; border-top: 1px solid rgba(201,151,60,.15); width: min(100%, 620px); }
+  .share .verse { margin-top: 0; }
+  .share-text { margin-top: 1.2em; color: var(--muted); font-size: 19px; line-height: 1.5; }
+  .credit { margin-top: 3em; font: 12px var(--sans); letter-spacing: .08em; color: var(--muted); max-width: 520px; line-height: 1.6; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .work { opacity: 1; transform: none; transition: none; }
+    .flame, .flame > div, .halo, .spark, .scroll-hint, .hero::before,
+    .hero h1, .hero .sub, .hero .intro { animation: none !important; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a href="#inicio">Humilde Instrumento</a>
+  <div class="lang" role="group" aria-label="Idioma / Language">
+    <button type="button" class="pill" data-lang="es" aria-pressed="true">ES</button>
+    <button type="button" class="pill" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<section class="hero" id="inicio">
+  <div class="candle" aria-hidden="true">
+    <div class="halo"></div>
+    <div class="spark"></div>
+    <div class="flame"><div class="outer"></div><div class="inner"></div><div class="core"></div></div>
+    <div class="wick"></div>
+  </div>
+  <h1 data-t="title"></h1>
+  <p class="sub" data-t="subtitle"></p>
+  <p class="intro" data-t="intro"></p>
+  <a class="scroll-hint" href="#sala" data-t="enter"></a>
+</section>
+
+<main class="room" id="sala"></main>
+
+<section class="outro" id="cierre">
+  <div class="candle" aria-hidden="true">
+    <div class="halo"></div>
+    <div class="spark"></div>
+    <div class="flame"><div class="outer"></div><div class="inner"></div><div class="core"></div></div>
+    <div class="wick"></div>
+  </div>
+  <h2>Humilde Instrumento</h2>
+  <p class="tag" data-t="tagline"></p>
+  <p class="verse"><q data-t="endVerse"></q><cite data-t="endRef"></cite></p>
+  <div class="reflection">
+    <span class="numeral" data-t="reflTitle"></span>
+    <div id="reflBody"></div>
+  </div>
+  <div class="about">
+    <p data-t="about"></p>
+    <p class="signature" data-t="signature"></p>
+  </div>
+  <div class="links" id="links"></div>
+
+  <div class="share">
+    <p class="verse"><q data-t="goVerse"></q><cite data-t="goRef"></cite></p>
+    <p class="share-text" data-t="shareText"></p>
+    <div class="links">
+      <button type="button" class="pill" id="shNative" hidden data-t="shShare"></button>
+      <a class="pill" id="shWa" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="pill" id="shX" target="_blank" rel="noopener">X</a>
+      <a class="pill" id="shFb" target="_blank" rel="noopener">Facebook</a>
+      <button type="button" class="pill" id="shCopy" data-t="shCopy"></button>
+    </div>
+  </div>
+  <p class="credit" data-t="credit"></p>
+</section>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   CONFIGURACIÓN: todo lo que vas a querer cambiar está acá.
+   ════════════════════════════════════════════════════════════════ */
+
+// "horizontal" (16:9) o "vertical" (9:16), según cómo exportaste las escenas
+const FORMATO = "horizontal";
+
+// Tus enlaces (dejá "" para ocultar uno)
+const LINKS = {
+  OpenSea:   "https://opensea.io/HumildeInstrumento",
+  X:         "",
+  Instagram: "",
+};
+
+const UI = {
+  es: {
+    title: "Del ruido a la luz",
+    subtitle: "Una pequeña sala sobre el silencio y la presencia",
+    intro: "Seis escenas, un mismo camino: detenerse, callar y dejar que Dios hable. Recorré la sala despacio. Cada cuadro tiene su palabra y su historia.",
+    enter: "Entrar a la sala ↓",
+    tagline: "Fe · Mente · Camino interior",
+    endVerse: "La paz os dejo, mi paz os doy.",
+    endRef: "Juan 14:27 · RV1909",
+    about: "Siento el llamado a compartir lo que muchas veces ignoramos sobre nosotros mismos: cómo funciona el cerebro, las pulsiones de vida y de muerte que nos mueven, la fe que nos sostiene y el camino para encontrarnos con Dios.",
+    credit: "Obra de presentación, no está a la venta. Creada con IA; la voz, las historias y las reflexiones son mías. Citas bíblicas: Reina-Valera 1909 y King James (dominio público).",
+    soundOn: "🔇 Activar sonido", soundOff: "🔊 Sonido",
+    play: "▶ Reproducir", pause: "❚❚ Pausa", restart: "⏮ Desde el inicio", again: "↺ Ver de nuevo",
+    missing: "Falta el video", version: "RV1909",
+    reflTitle: "Reflexión",
+    signature: "— Por Humilde Instrumento",
+    reflection: [
+      "Vivimos convencidos de que el cambio llega haciendo más: más esfuerzo, más ruido, más velocidad. Pero las transformaciones más hondas empiezan cuando nos detenemos.",
+      "El silencio no es vacío. Es el lugar donde la mente se aquieta, donde dejamos de defendernos y donde Dios, que nunca se fue, por fin puede ser escuchado.",
+      "No hace falta un monasterio. Alcanza con cerrar la puerta unos minutos, respirar y decir: «Aquí estoy». Lo demás lo hace Él.",
+    ],
+    goVerse: "Id por todo el mundo; predicad el evangelio a toda criatura.",
+    goRef: "Marcos 16:15 · RV1909",
+    shareText: "Si esta sala te dejó algo de paz, compartila con alguien que la necesite.",
+    shShare: "Compartir", shCopy: "Copiar enlace", shCopied: "¡Copiado!",
+    shMsg: "Del ruido a la luz: una pequeña sala sobre el silencio y la presencia de Dios.",
+  },
+  en: {
+    title: "From Noise to Light",
+    subtitle: "A small room about silence and presence",
+    intro: "Six scenes, one path: to stop, to be still, and to let God speak. Walk through the room slowly. Each piece has its word and its story.",
+    enter: "Enter the room ↓",
+    tagline: "Faith · Mind · Inner path",
+    endVerse: "Peace I leave with you, my peace I give unto you.",
+    endRef: "John 14:27 · KJV",
+    about: "I feel called to share what we so often overlook about ourselves: how the brain works, the life and death drives that move us, the faith that sustains us, and the path to encountering God.",
+    credit: "Introductory piece, not for sale. Made with AI; the voice, stories and reflections are my own. Bible quotes: Reina-Valera 1909 and King James Version (public domain).",
+    soundOn: "🔇 Sound off", soundOff: "🔊 Sound on",
+    play: "▶ Play", pause: "❚❚ Pause", restart: "⏮ From the start", again: "↺ Watch again",
+    missing: "Video missing", version: "KJV",
+    reflTitle: "Reflection",
+    signature: "— By Humble Instrument",
+    reflection: [
+      "We live convinced that change comes from doing more: more effort, more noise, more speed. But the deepest transformations begin when we stop.",
+      "Silence is not emptiness. It is the place where the mind grows still, where we stop defending ourselves, and where God, who never left, can finally be heard.",
+      "You don’t need a monastery. It is enough to close the door for a few minutes, breathe, and say: “Here I am.” He does the rest.",
+    ],
+    goVerse: "Go ye into all the world, and preach the gospel to every creature.",
+    goRef: "Mark 16:15 · KJV",
+    shareText: "If this room gave you some peace, share it with someone who needs it.",
+    shShare: "Share", shCopy: "Copy link", shCopied: "Copied!",
+    shMsg: "From Noise to Light: a small room about silence and the presence of God.",
+  },
+};
+
+// Escenas: archivo, título, cita y la historia de debajo (un párrafo por línea del arreglo)
+const SCENES = [
+  {
+    file: "escena1.mp4",
+    es: {
+      title: "El ruido",
+      verse: ["Venid a mí todos los que estáis trabajados y cargados, que yo os haré descansar.", "Mateo 11:28"],
+      story: [
+        "Llueve y la ciudad no se calla nunca. Carteles de neón, bocinas, mensajes sin responder, pendientes que se acumulan. Él está en medio de todo eso y, sin embargo, se siente solo.",
+        "No le falta nada y le falta todo. Hace tiempo que no escucha otra voz que la del apuro.",
+      ],
+    },
+    en: {
+      title: "The Noise",
+      verse: ["Come unto me, all ye that labour and are heavy laden, and I will give you rest.", "Matthew 11:28"],
+      story: [
+        "It is raining, and the city never goes quiet. Neon signs, horns, unanswered messages, tasks piling up. He stands in the middle of it all and still feels alone.",
+        "He lacks nothing, and he lacks everything. It has been a long time since he heard any voice but the voice of hurry.",
+      ],
+    },
+  },
+  {
+    file: "escena2.mp4",
+    es: {
+      title: "Detenerse",
+      verse: ["Éntrate en tu cámara, y cerrada tu puerta, ora a tu Padre que está en secreto.", "Mateo 6:6"],
+      story: [
+        "Un día decide parar. No huye: simplemente cierra la puerta, se sienta y cierra los ojos.",
+        "Al principio cuesta. La mente sigue corriendo, trae listas y preocupaciones. Pero él se queda. Detenerse ya es una forma de decir «aquí estoy».",
+      ],
+    },
+    en: {
+      title: "Stopping",
+      verse: ["Enter into thy closet, and when thou hast shut thy door, pray to thy Father which is in secret.", "Matthew 6:6"],
+      story: [
+        "One day he decides to stop. He does not run away: he simply closes the door, sits down and closes his eyes.",
+        "At first it is hard. His mind keeps racing, bringing lists and worries. But he stays. Stopping is already a way of saying “here I am”.",
+      ],
+    },
+  },
+  {
+    file: "escena3.mp4",
+    es: {
+      title: "El silencio",
+      verse: ["Salió y se fue a un lugar desierto, y allí oraba.", "Marcos 1:35"],
+      story: [
+        "La respiración se vuelve lenta. Cuando dejamos de reaccionar, el cuerpo sale poco a poco del estado de alerta: el corazón se aquieta y la mente deja de saltar de un pensamiento a otro.",
+        "Jesús también buscaba lugares apartados para orar. En el silencio no hay nada que demostrar. Solo una vela, el aire y una presencia que empieza a sentirse.",
+      ],
+    },
+    en: {
+      title: "The Silence",
+      verse: ["He went out, and departed into a solitary place, and there prayed.", "Mark 1:35"],
+      story: [
+        "His breathing slows. When we stop reacting, the body gradually leaves its state of alert: the heart settles and the mind stops jumping from one thought to the next.",
+        "Jesus, too, sought solitary places to pray. In silence there is nothing to prove. Only a candle, the air, and a presence beginning to be felt.",
+      ],
+    },
+  },
+  {
+    file: "escena4.mp4",
+    es: {
+      title: "La presencia",
+      verse: ["Estad en mí, y yo en vosotros.", "Juan 15:4"],
+      story: [
+        "No llega como un trueno. Llega como una luz suave que siempre estuvo ahí, esperando que él hiciera silencio para notarla.",
+        "Ponerse en presencia de Dios no es escapar del mundo. Es volver a casa.",
+      ],
+    },
+    en: {
+      title: "The Presence",
+      verse: ["Abide in me, and I in you.", "John 15:4"],
+      story: [
+        "It does not come like thunder. It comes like a soft light that was always there, waiting for him to be quiet enough to notice.",
+        "Placing yourself in God’s presence is not escaping the world. It is coming home.",
+      ],
+    },
+  },
+  {
+    file: "escena5.mp4",
+    es: {
+      title: "La iluminación",
+      verse: ["Yo soy la luz del mundo: el que me sigue, no andará en tinieblas, mas tendrá lumbre de vida.", "Juan 8:12"],
+      story: [
+        "Algo se enciende por dentro. No es una idea ni una emoción pasajera: es paz. El rostro se afloja, levanta la mirada y aparece una sonrisa.",
+        "Las preguntas no desaparecen, pero ya no está solo frente a ellas.",
+      ],
+    },
+    en: {
+      title: "The Light",
+      verse: ["I am the light of the world: he that followeth me shall not walk in darkness, but shall have the light of life.", "John 8:12"],
+      story: [
+        "Something is lit within. It is not an idea or a passing emotion: it is peace. His face softens, he lifts his gaze, and a smile appears.",
+        "The questions do not disappear, but he no longer faces them alone.",
+      ],
+    },
+  },
+  {
+    file: "escena6.mp4",
+    es: {
+      title: "Volver al mundo",
+      verse: ["Vosotros sois la luz del mundo… Así alumbre vuestra luz delante de los hombres.", "Mateo 5:14, 16"],
+      story: [
+        "Abre los ojos y vuelve a salir a la calle. La gente sigue pasando, la vida sigue su ritmo. Pero ahora la luz lo toca todo.",
+        "El mundo es el mismo. Él ya no lo mira igual. Y quizás, sin decir nada, alguien más empiece a ver esa luz a través de él.",
+      ],
+    },
+    en: {
+      title: "Back to the World",
+      verse: ["Ye are the light of the world… Let your light so shine before men.", "Matthew 5:14, 16"],
+      story: [
+        "He opens his eyes and walks back out into the street. People keep passing by, life keeps its pace. But now the light touches everything.",
+        "The world is the same. He no longer sees it the same way. And perhaps, without a word, someone else begins to see that light through him.",
+      ],
+    },
+  },
+];
+
+/* ════════════════════════════════════════════════════════════════
+   A partir de acá no hace falta tocar nada.
+   ════════════════════════════════════════════════════════════════ */
+
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+let lang = "en";
+try { lang = localStorage.getItem("hi-lang") || "en"; } catch (e) {}
+
+// Con conexión lenta o "ahorro de datos" se usan las versiones livianas (480p).
+const conn = navigator.connection || {};
+const LITE = !!conn.saveData || /(^|-)2g|3g/.test(conn.effectiveType || "") || (conn.downlink && conn.downlink < 1.5);
+
+const room = document.getElementById("sala");
+let unmuted = null;
+
+SCENES.forEach((s, i) => {
+  const art = document.createElement("article");
+  art.className = "work";
+  art.innerHTML = `
+    <span class="numeral">${ROMAN[i]}</span>
+    <h2></h2>
+    <div class="frame ${FORMATO === "vertical" ? "vertical" : ""}">
+      <video src="${LITE ? s.file.replace(/\.mp4$/, "-lite.mp4") : s.file}" poster="${s.file.replace(/\.mp4$/, ".jpg")}" playsinline preload="none"></video>
+      <div class="missing"><span class="miss-label"></span><code>${s.file}</code></div>
+    </div>
+    <div class="progress" aria-hidden="true"><span></span></div>
+    <div class="controls">
+      <button type="button" class="pill c-play"></button>
+      <button type="button" class="pill c-restart"></button>
+      <button type="button" class="pill c-mute"></button>
+    </div>
+    <p class="verse"><q></q><cite></cite></p>
+    <div class="story"></div>`;
+  room.appendChild(art);
+
+  const frame = art.querySelector(".frame");
+  const video = art.querySelector("video");
+  const bar = art.querySelector(".progress span");
+  video.addEventListener("error", () => { frame.classList.add("is-missing"); art.querySelector(".controls").hidden = true; });
+
+  const playThis = () => {
+    // solo suena un cuadro a la vez
+    document.querySelectorAll(".work video").forEach(v => { if (v !== video) v.pause(); });
+    video.play().catch(() => {});
+  };
+  art.querySelector(".c-play").addEventListener("click", () => {
+    if (video.paused || video.ended) { if (video.ended) video.currentTime = 0; playThis(); }
+    else video.pause();
+  });
+  frame.addEventListener("click", () => art.querySelector(".c-play").click());
+  art.querySelector(".c-restart").addEventListener("click", () => { video.currentTime = 0; playThis(); });
+  art.querySelector(".c-mute").addEventListener("click", () => { video.muted = !video.muted; refreshControls(); });
+
+  ["play", "pause", "ended", "volumechange"].forEach(ev => video.addEventListener(ev, refreshControls));
+  video.addEventListener("timeupdate", () => {
+    bar.style.width = (video.duration ? (video.currentTime / video.duration) * 100 : 0) + "%";
+  });
+});
+
+function refreshControls() {
+  document.querySelectorAll(".work").forEach(art => {
+    const v = art.querySelector("video");
+    art.querySelector(".c-play").textContent =
+      v.ended ? UI[lang].again : (v.paused ? UI[lang].play : UI[lang].pause);
+    art.querySelector(".c-restart").textContent = UI[lang].restart;
+    art.querySelector(".c-mute").textContent = v.muted ? UI[lang].soundOn : UI[lang].soundOff;
+    art.querySelector(".c-mute").setAttribute("aria-pressed", String(!v.muted));
+  });
+}
+const refreshSoundLabels = refreshControls;
+
+function render() {
+  document.documentElement.lang = lang;
+  document.title = UI[lang].title + " · Humilde Instrumento";
+  document.querySelectorAll("[data-t]").forEach(el => { el.textContent = UI[lang][el.dataset.t]; });
+  document.querySelectorAll(".lang .pill").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
+
+  document.querySelectorAll(".work").forEach((art, i) => {
+    const t = SCENES[i][lang];
+    art.querySelector("h2").textContent = t.title;
+    art.querySelector(".verse q").textContent = t.verse[0];
+    art.querySelector(".verse cite").textContent = t.verse[1] + " · " + UI[lang].version;
+    art.querySelector(".story").innerHTML = t.story.map(p => `<p>${p}</p>`).join("");
+    art.querySelector(".miss-label").textContent = UI[lang].missing;
+  });
+
+  const links = document.getElementById("links");
+  links.innerHTML = "";
+  Object.entries(LINKS).forEach(([name, url]) => {
+    if (!url) return;
+    const a = document.createElement("a");
+    a.href = url; a.target = "_blank"; a.rel = "noopener";
+    a.className = "pill"; a.textContent = name;
+    links.appendChild(a);
+  });
+  document.getElementById("reflBody").innerHTML = UI[lang].reflection.map(p => `<p>${p}</p>`).join("");
+
+  const url = location.href.split("#")[0];
+  const msg = UI[lang].shMsg;
+  const enc = encodeURIComponent;
+  document.getElementById("shWa").href = `https://wa.me/?text=${enc(msg + " " + url)}`;
+  document.getElementById("shX").href = `https://twitter.com/intent/tweet?text=${enc(msg)}&url=${enc(url)}`;
+  document.getElementById("shFb").href = `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`;
+  refreshSoundLabels();
+}
+
+const shNative = document.getElementById("shNative");
+if (navigator.share) {
+  shNative.hidden = false;
+  shNative.addEventListener("click", () => {
+    navigator.share({ title: UI[lang].title, text: UI[lang].shMsg, url: location.href.split("#")[0] }).catch(() => {});
+  });
+}
+document.getElementById("shCopy").addEventListener("click", async (e) => {
+  try { await navigator.clipboard.writeText(location.href.split("#")[0]); } catch (err) {}
+  e.target.textContent = UI[lang].shCopied;
+  setTimeout(() => { e.target.textContent = UI[lang].shCopy; }, 2000);
+});
+
+document.querySelectorAll(".lang .pill").forEach(b => b.addEventListener("click", () => {
+  lang = b.dataset.lang;
+  try { localStorage.setItem("hi-lang", lang); } catch (e) {}
+  render();
+}));
+
+// Cada cuadro aparece al llegar a él; si te vas, el video se pausa. Nada se reproduce solo.
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.classList.add("seen");
+    else e.target.querySelector("video").pause();
+  });
+}, { threshold: 0.2 });
+document.querySelectorAll(".work").forEach(a => io.observe(a));
+
+render();
+</script>
+</body>
+</html>
